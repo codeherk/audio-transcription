@@ -1,0 +1,39 @@
+# Logs
+logs/
+*.log
+*.log.*
+
+# Environment variables
+.env
+.env.*
+
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Build outputs
+dist/
+build/
+out/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Audio transcription specific
+*.wav
+*.mp3
+*.ogg
+*.flac
+*.m4a
+*.aac
+*.opus
+*-transcribed.txt
+transcription_*.log
