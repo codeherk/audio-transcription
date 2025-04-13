@@ -1,5 +1,6 @@
 # Name of the virtual environment directory
-VENV_DIR = venv
+VENV_DIR=venv
+LANG=es
 
 # Python executable
 PYTHON = python3
@@ -18,7 +19,7 @@ freeze:
 
 # Run the main python script, passing in audio file path as argument
 run:
-	$(VENV_DIR)/bin/python main.py $(AUDIO_FILE)
+	$(VENV_DIR)/bin/python main.py $(AUDIO_FILE) $(LANG)
 	
 # Prevent "run" from being interpreted as a file
 .PHONY: run

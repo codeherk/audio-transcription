@@ -19,8 +19,6 @@ logging.basicConfig(
     ]
 )
 
-
-
 def convert_m4a_to_wav(m4a_filepath, wav_filepath):
     """
     Converts an M4A audio file to WAV format.
@@ -54,12 +52,13 @@ def translate_to_english(spanish_text)-> ollama.GenerateResponse:
     logging.info("Translation completed successfully.")
     return translation
    
-def transcribe_audio(file_path):
+def transcribe_audio(file_path, source_language):
     """
     Transcribes an audio file using the Whisper model.
 
     Args:
         file_path: Path to the audio file.
+        source_language: Language of the audio file (e.g., 'es' for Spanish).
     """
     logging.info(f"Starting transcription for file: {file_path}")
 
@@ -74,11 +73,11 @@ def transcribe_audio(file_path):
         file_path = wav_file_path        
 
     # Transcribe the audio file
-    # TODO: Look into using Apple MPS GPU and remove fp16 arugment.
-    result = model.transcribe(file_path, fp16=False)
+    result: dict[str, str | list]
     
     try:
-        result = model.transcribe(file_path)
+        # TODO: Look into using Apple MPS GPU and remove fp16 arugment.
+        result = model.transcribe(file_path, language=source_language, fp16=False)
         logging.info("Transcription completed successfully.")
     except Exception as e:
         logging.error(f"Error during transcription: {e}")
@@ -130,13 +129,19 @@ def transcribe_audio(file_path):
     logging.info(f"Transcription saved successfully to '{transcription_file_path}'.")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        logging.error("Invalid number of arguments. Usage: python main.py <audio_file_path>")
+    if len(sys.argv) != 3:
+        logging.error("Invalid number of arguments. Usage: python main.py <audio_file_path> <source_language>")
         sys.exit(1)
     
     audio_file_path = sys.argv[1]
+    source_language = sys.argv[2]
+    
     try:
-        transcribe_audio(audio_file_path)
+        if source_language not in ["es", "en"]:  # Add more supported languages as needed
+            logging.error("Unsupported source language. Supported languages are: 'es', 'en'.")
+            sys.exit(1)
+        
+        transcribe_audio(audio_file_path, source_language)
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         sys.exit(1)
